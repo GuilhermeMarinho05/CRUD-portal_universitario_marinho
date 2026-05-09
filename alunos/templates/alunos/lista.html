@@ -1,23 +1,78 @@
-<h1>Lista de Alunos</h1>
+{% extends "base.html" %}
 
-<a href="/alunos/novo/">
-    Novo Aluno
-</a>
+{% block page_title %}Alunos | Portal Universitário{% endblock %}
+{% block eyebrow %}Cadastro{% endblock %}
+{% block title %}Alunos{% endblock %}
 
-<hr>
+{% block header_actions %}
+    <a class="button button-primary" href="/alunos/novo/">Novo Aluno</a>
+{% endblock %}
 
-{% for aluno in alunos %}
+{% block content %}
+<div class="content-stack">
+    <section class="metric-strip" aria-label="Resumo de alunos">
+        <article class="metric">
+            <span>Alunos cadastrados</span>
+            <strong>{{ alunos|length }}</strong>
+        </article>
+        <article class="metric">
+            <span>Módulo</span>
+            <strong>Acadêmico</strong>
+        </article>
+        <article class="metric">
+            <span>Identificador</span>
+            <strong>Matrícula</strong>
+        </article>
+    </section>
 
-<p>
-    {{ aluno.nome }} - {{ aluno.matricula }}
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Registros</h2>
+            <span>{{ alunos|length }} aluno(s)</span>
+        </div>
 
-    <a href="/alunos/editar/{{ aluno.id }}/">
-        Editar
-    </a>
-
-    <a href="/alunos/excluir/{{ aluno.id }}/">
-        Excluir
-    </a>
-</p>
-
-{% endfor %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Matrícula</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td>
+                            <div class="person-cell">
+                                <span class="avatar">{{ aluno.nome|slice:":1"|upper }}</span>
+                                <span>
+                                    <span class="cell-title">{{ aluno.nome }}</span>
+                                    <span class="cell-subtitle">ID {{ aluno.id }}</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ aluno.matricula }}</td>
+                        <td>
+                            <div class="row-actions">
+                                <a class="button" href="/alunos/editar/{{ aluno.id }}/">Editar</a>
+                                <a class="button button-danger" href="/alunos/excluir/{{ aluno.id }}/">Excluir</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <strong>Nenhum aluno cadastrado</strong>
+                                <span>Use o botão Novo Aluno para começar.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
