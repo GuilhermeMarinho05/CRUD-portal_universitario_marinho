@@ -1,0 +1,27 @@
+<h1>Lista de Disciplinas</h1>
+
+<a href="/disciplinas/novo/">
+    Nova Disciplina
+</a>
+
+<hr>
+
+{% for disciplina in disciplinas %}
+
+<p>
+
+    {{ disciplina.nome }}
+    -
+    {{ disciplina.codigo }}
+
+    <a href="/disciplinas/editar/{{ disciplina.id }}/">
+        Editar
+    </a>
+
+    <a href="/disciplinas/excluir/{{ disciplina.id }}/">
+        Excluir
+    </a>
+
+</p>
+
+{% endfor %}

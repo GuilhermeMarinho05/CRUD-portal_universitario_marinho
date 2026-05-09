@@ -1,10 +1,6 @@
 from django.contrib import admin
-from .models import Nota 
-
-# Register your models here.
+from .models import Nota
 
 @admin.register(Nota)
 class NotaAdmin(admin.ModelAdmin):
-    list_display = ('aluno','disciplina','valor')
-    search_fields = ('aluno__nome','disciplina_nome')
-    list_filter = ('disciplina',)
+    list_display = ('aluno', 'disciplina', 'nota1', 'nota2')

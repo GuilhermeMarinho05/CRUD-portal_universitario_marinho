@@ -1,0 +1,16 @@
+<h1>Excluir Disciplina</h1>
+
+<p>
+    Deseja excluir:
+    {{ disciplina.nome }}?
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Confirmar
+    </button>
+
+</form>

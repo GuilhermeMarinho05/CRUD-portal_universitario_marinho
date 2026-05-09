@@ -1,0 +1,20 @@
+<h1>Notas</h1>
+
+<a href="{% url 'criar_nota' %}">+ Nova Nota</a>
+
+<hr>
+
+{% for nota in notas %}
+    <p>
+        {{ nota.aluno.nome }} -
+        {{ nota.disciplina.nome }} -
+        Nota 1: {{ nota.nota1 }} |
+        Nota 2: {{ nota.nota2 }} |
+        Média: {{ nota.media }}
+
+        <a href="{% url 'editar_nota' nota.id %}">Editar</a>
+        <a href="{% url 'deletar_nota' nota.id %}">Excluir</a>
+    </p>
+{% empty %}
+    <p>Nenhuma nota cadastrada</p>
+{% endfor %}

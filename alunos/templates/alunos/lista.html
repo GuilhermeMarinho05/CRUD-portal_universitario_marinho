@@ -1,0 +1,23 @@
+<h1>Lista de Alunos</h1>
+
+<a href="/alunos/novo/">
+    Novo Aluno
+</a>
+
+<hr>
+
+{% for aluno in alunos %}
+
+<p>
+    {{ aluno.nome }} - {{ aluno.matricula }}
+
+    <a href="/alunos/editar/{{ aluno.id }}/">
+        Editar
+    </a>
+
+    <a href="/alunos/excluir/{{ aluno.id }}/">
+        Excluir
+    </a>
+</p>
+
+{% endfor %}
