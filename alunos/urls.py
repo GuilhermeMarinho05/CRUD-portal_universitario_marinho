@@ -18,3 +18,5 @@ path(
     views.excluir_aluno,
     name='excluir_aluno'
 ),
+
+path('dashboard/<int:id>/', views.dashboard_aluno, name='dashboard_aluno'),

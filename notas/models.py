@@ -9,7 +9,7 @@ class Nota(models.Model):
     nota2 = models.FloatField()
 
     class Meta:
-        unique_together = ('aluno', 'disciplina')  # 🚨 evita duplicação
+        unique_together = ('aluno', 'disciplina') 
 
     def media(self):
         return (self.nota1 + self.nota2) / 2

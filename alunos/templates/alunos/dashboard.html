@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block title %}Dashboard de {{ aluno.nome }}{%
+endblock %} {% block content %}
+<p><strong>Matrícula:</strong> {{ aluno.matricula }}</p>
+
+<p><strong>Média Geral:</strong> {{ media_geral }}</p>
+
+<p><strong>Disciplinas cursando:</strong> {{ disciplinas_cursando }}</p>
+
+<a href="/alunos/">← Voltar</a>
+{% endblock %}
