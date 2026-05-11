@@ -1,20 +1,92 @@
-<h1>Notas</h1>
+{% extends "base.html" %}
 
-<a href="{% url 'criar_nota' %}">+ Nova Nota</a>
+{% block page_title %}Notas | Portal Universitário{% endblock %}
+{% block eyebrow %}Avaliações{% endblock %}
+{% block title %}Notas{% endblock %}
 
-<hr>
+{% block header_actions %}
+    <a class="button button-primary" href="{% url 'criar_nota' %}">Nova Nota</a>
+{% endblock %}
 
-{% for nota in notas %}
-    <p>
-        {{ nota.aluno.nome }} -
-        {{ nota.disciplina.nome }} -
-        Nota 1: {{ nota.nota1 }} |
-        Nota 2: {{ nota.nota2 }} |
-        Média: {{ nota.media }}
+{% block content %}
+<div class="content-stack">
+    <section class="metric-strip" aria-label="Resumo de notas">
+        <article class="metric">
+            <span>Notas cadastradas</span>
+            <strong>{{ notas|length }}</strong>
+        </article>
+        <article class="metric">
+            <span>Módulo</span>
+            <strong>Avaliações</strong>
+        </article>
+        <article class="metric">
+            <span>Cálculo</span>
+            <strong>Média</strong>
+        </article>
+    </section>
 
-        <a href="{% url 'editar_nota' nota.id %}">Editar</a>
-        <a href="{% url 'deletar_nota' nota.id %}">Excluir</a>
-    </p>
-{% empty %}
-    <p>Nenhuma nota cadastrada</p>
-{% endfor %}
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Registros</h2>
+            <span>{{ notas|length }} nota(s)</span>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Disciplina</th>
+                        <th>Notas</th>
+                        <th>Situação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nota in notas %}
+                    <tr>
+                        <td>
+                            <span class="cell-title">{{ nota.aluno.nome }}</span>
+                            <span class="cell-subtitle">{{ nota.aluno.matricula }}</span>
+                        </td>
+                        <td>
+                            <span class="cell-title">{{ nota.disciplina.nome }}</span>
+                            <span class="cell-subtitle">{{ nota.disciplina.codigo }}</span>
+                        </td>
+                        <td>
+                            <div class="score-grid">
+                                <span class="score"><small>N1</small>{{ nota.nota1|floatformat:1 }}</span>
+                                <span class="score"><small>N2</small>{{ nota.nota2|floatformat:1 }}</span>
+                                <span class="score"><small>Média</small>{{ nota.media|floatformat:1 }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if nota.media >= 7 %}
+                                <span class="status status-ok">Aprovado</span>
+                            {% else %}
+                                <span class="status status-warn">Revisar</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a class="button" href="{% url 'editar_nota' nota.id %}">Editar</a>
+                                <a class="button button-danger" href="{% url 'deletar_nota' nota.id %}">Excluir</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <strong>Nenhuma nota cadastrada</strong>
+                                <span>Use o botão Nova Nota para começar.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

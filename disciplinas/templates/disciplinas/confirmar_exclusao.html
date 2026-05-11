@@ -1,16 +1,24 @@
-<h1>Excluir Disciplina</h1>
+{% extends "base.html" %}
 
-<p>
-    Deseja excluir:
-    {{ disciplina.nome }}?
-</p>
+{% block page_title %}Excluir Disciplina | Portal Universitário{% endblock %}
+{% block eyebrow %}Grade curricular{% endblock %}
+{% block title %}Excluir Disciplina{% endblock %}
 
-<form method="POST">
+{% block content %}
+<div class="content-stack">
+    <section class="confirm-panel">
+        <p>
+            Deseja excluir
+            <span class="confirm-name">{{ disciplina.nome }}</span>?
+        </p>
 
-    {% csrf_token %}
-
-    <button type="submit">
-        Confirmar
-    </button>
-
-</form>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="confirm-actions">
+                <button type="submit">Confirmar</button>
+                <a class="button" href="/disciplinas/">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

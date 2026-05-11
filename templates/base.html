@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block page_title %}Portal Universitário{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="/alunos/">
+                <span class="brand-mark">PU</span>
+                <span>
+                    <strong>Portal</strong>
+                    <small>Universitário</small>
+                </span>
+            </a>
+
+            <nav class="nav" aria-label="Principal">
+                <a href="/alunos/" class="{% if '/alunos/' in request.path %}is-active{% endif %}">Alunos</a>
+                <a href="/disciplinas/" class="{% if '/disciplinas/' in request.path %}is-active{% endif %}">Disciplinas</a>
+                <a href="/notas/" class="{% if '/notas/' in request.path %}is-active{% endif %}">Notas</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">{% block eyebrow %}Gestão acadêmica{% endblock %}</p>
+                    <h1>{% block title %}Portal Universitário{% endblock %}</h1>
+                </div>
+                <div class="topbar-actions">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </header>
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
