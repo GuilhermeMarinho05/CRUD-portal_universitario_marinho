@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block page_title %}Excluir Nota | Portal Universitário{% endblock %}
+{% block eyebrow %}Avaliações{% endblock %}
+{% block title %}Excluir Nota{% endblock %}
+
+{% block content %}
+<div class="content-stack">
+    <section class="confirm-panel">
+        <p>
+            Deseja excluir a nota de
+            <span class="confirm-name">{{ nota.aluno.nome }}</span>
+            em
+            <span class="confirm-name">{{ nota.disciplina.nome }}</span>?
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="confirm-actions">
+                <button type="submit">Confirmar</button>
+                <a class="button" href="{% url 'lista_notas' %}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}
