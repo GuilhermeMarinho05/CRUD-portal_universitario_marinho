@@ -35,5 +35,9 @@ def editar_nota(request, id):
 # DELETAR
 def deletar_nota(request, id):
     nota = get_object_or_404(Nota, id=id)
-    nota.delete()
-    return redirect('lista_notas')
+
+    if request.method == 'POST':
+        nota.delete()
+        return redirect('lista_notas')
+
+    return render(request, 'notas/confirmar_exclusao.html', {'nota': nota})

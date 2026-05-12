@@ -1,5 +1,8 @@
-{% extends "base.html" %} {% block title %}Dashboard de {{ aluno.nome }}{%
-endblock %} {% block content %}
+{% extends "base.html" %}
+
+{% block title %}Dashboard de {{ aluno.nome }}{% endblock %}
+
+{% block content %}
 <p><strong>Matrícula:</strong> {{ aluno.matricula }}</p>
 
 <p><strong>Média Geral:</strong> {{ media_geral }}</p>

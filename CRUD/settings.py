@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,13 +20,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n%yv%0y!^8ei0l9lg@y6o*5)*tqkqy!$+c*^%o(3))4ab_e+qi'
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).lower() in ('1', 'true', 'yes', 'on')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+PRODUCTION = env_bool('DJANGO_PRODUCTION', False)
+
+# SECURITY WARNING: keep the secret key used in production secret.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+
+if not SECRET_KEY:
+    if PRODUCTION:
+        raise RuntimeError('DJANGO_SECRET_KEY must be set when DJANGO_PRODUCTION=True.')
+    SECRET_KEY = 'local-dev-secret-key-change-me-7Yd8qN2xQp4vR9mT6sL3cW5zA1bH0uK'
+
+# SECURITY WARNING: don't run with debug turned on in production.
+DEBUG = env_bool('DJANGO_DEBUG', not PRODUCTION)
+
+default_allowed_hosts = 'localhost,127.0.0.1,[::1]' if not PRODUCTION else ''
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', default_allowed_hosts).split(',')
+    if host.strip()
+]
+
+if PRODUCTION and not ALLOWED_HOSTS:
+    raise RuntimeError('DJANGO_ALLOWED_HOSTS must be set when DJANGO_PRODUCTION=True.')
 
 
 # Application definition
@@ -127,3 +147,9 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+SECURE_SSL_REDIRECT = env_bool('DJANGO_SECURE_SSL_REDIRECT', PRODUCTION)
+SESSION_COOKIE_SECURE = env_bool('DJANGO_SESSION_COOKIE_SECURE', PRODUCTION)
+CSRF_COOKIE_SECURE = env_bool('DJANGO_CSRF_COOKIE_SECURE', PRODUCTION)
+SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_SECURE_HSTS_SECONDS', 31536000 if PRODUCTION else 0))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', PRODUCTION)
+SECURE_HSTS_PRELOAD = env_bool('DJANGO_SECURE_HSTS_PRELOAD', PRODUCTION)
