@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'disciplinas',
     'notas', 
     'faltas',
-    'rolepermissions',                                                                                                      
 ]
 
 MIDDLEWARE = [
@@ -157,5 +156,3 @@ CSRF_COOKIE_SECURE = env_bool('DJANGO_CSRF_COOKIE_SECURE', PRODUCTION)
 SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_SECURE_HSTS_SECONDS', 31536000 if PRODUCTION else 0))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', PRODUCTION)
 SECURE_HSTS_PRELOAD = env_bool('DJANGO_SECURE_HSTS_PRELOAD', PRODUCTION)
-
-ROLEPERMISSIONS_MODULE = "permissoes.roles"

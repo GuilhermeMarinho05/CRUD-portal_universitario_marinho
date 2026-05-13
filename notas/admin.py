@@ -1,29 +1,23 @@
 from django.contrib import admin
+
+from users.access import is_aluno, is_professor
 from .models import Nota
+
 
 @admin.register(Nota)
 class NotaAdmin(admin.ModelAdmin):
     list_display = ('aluno', 'disciplina', 'nota1', 'nota2')
-
-    from django.contrib import admin
-from rolepermissions.checkers import has_role
-from .models import Nota
-
-
-@admin.register(Nota)
-class NotaAdmin(admin.ModelAdmin):
+    list_filter = ('disciplina',)
+    search_fields = ('aluno__nome', 'aluno__matricula', 'disciplina__nome')
 
     def has_view_permission(self, request, obj=None):
-        return (
-            has_role(request.user, 'aluno') or
-            has_role(request.user, 'professor')
-        )
+        return is_aluno(request.user) or is_professor(request.user)
 
     def has_add_permission(self, request):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)
 
     def has_change_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)
 
     def has_delete_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)

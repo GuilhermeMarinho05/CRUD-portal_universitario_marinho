@@ -1,18 +1,34 @@
 from django.contrib import admin
-from .models import Falta, Chamada, PresencaChamada, LimiteFaltas
+
+from users.access import is_aluno, is_professor
+from .models import Chamada, Falta, LimiteFaltas, PresencaChamada
+
+
+class ProfessorWriteAdminMixin:
+    def has_view_permission(self, request, obj=None):
+        return is_aluno(request.user) or is_professor(request.user)
+
+    def has_add_permission(self, request):
+        return is_professor(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_professor(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_professor(request.user)
 
 
 @admin.register(Falta)
-class FaltaAdmin(admin.ModelAdmin):
+class FaltaAdmin(ProfessorWriteAdminMixin, admin.ModelAdmin):
     list_display = ('aluno', 'disciplina', 'data', 'justificada', 'criado_em')
     list_filter = ('justificada', 'data', 'disciplina')
-    search_fields = ('aluno__nome', 'disciplina__nome')
-    date_hierarchy = 'data'  
+    search_fields = ('aluno__nome', 'aluno__matricula', 'disciplina__nome')
+    date_hierarchy = 'data'
     ordering = ('-data',)
 
 
 @admin.register(Chamada)
-class ChamadaAdmin(admin.ModelAdmin):
+class ChamadaAdmin(ProfessorWriteAdminMixin, admin.ModelAdmin):
     list_display = ('disciplina', 'data', 'professor', 'realizado_em')
     list_filter = ('disciplina', 'data')
     search_fields = ('disciplina__nome', 'professor__username')
@@ -21,38 +37,16 @@ class ChamadaAdmin(admin.ModelAdmin):
 
 
 @admin.register(PresencaChamada)
-class PresencaChamadaAdmin(admin.ModelAdmin):
+class PresencaChamadaAdmin(ProfessorWriteAdminMixin, admin.ModelAdmin):
     list_display = ('chamada', 'aluno', 'presente')
     list_filter = ('presente', 'chamada__disciplina')
-    search_fields = ('aluno__nome', 'chamada__disciplina__nome')
-    raw_id_fields = ('chamada', 'aluno')  
+    search_fields = ('aluno__nome', 'aluno__matricula', 'chamada__disciplina__nome')
+    raw_id_fields = ('chamada', 'aluno')
+
 
 @admin.register(LimiteFaltas)
-class LimiteFaltasAdmin(admin.ModelAdmin):
+class LimiteFaltasAdmin(ProfessorWriteAdminMixin, admin.ModelAdmin):
     list_display = ('disciplina', 'carga_horaria_total', 'percentual_maximo', 'faltas_maximas')
     list_filter = ('disciplina',)
     search_fields = ('disciplina__nome',)
-    readonly_fields = ('faltas_maximas',)  
-
-    from django.contrib import admin
-from rolepermissions.checkers import has_role
-from .models import Falta
-
-
-@admin.register(Falta)
-class FaltaAdmin(admin.ModelAdmin):
-
-    def has_view_permission(self, request, obj=None):
-        return (
-            has_role(request.user, 'aluno') or
-            has_role(request.user, 'professor')
-        )
-
-    def has_add_permission(self, request):
-        return has_role(request.user, 'professor')
-
-    def has_change_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
-
-    def has_delete_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
+    readonly_fields = ('faltas_maximas',)
