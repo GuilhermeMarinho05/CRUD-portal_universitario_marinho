@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
-{% block page_title %}Notas | Portal Universitário{% endblock %}
+{% block page_title %}{% if can_manage %}Notas{% else %}Minhas Notas{% endif %} | Portal Universitário{% endblock %}
 {% block eyebrow %}Avaliações{% endblock %}
-{% block title %}Notas{% endblock %}
+{% block title %}{% if can_manage %}Notas{% else %}Minhas Notas{% endif %}{% endblock %}
 
 {% block header_actions %}
+    {% if can_manage %}
     <a class="button button-primary" href="{% url 'criar_nota' %}">Nova Nota</a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -39,7 +41,9 @@
                         <th>Disciplina</th>
                         <th>Notas</th>
                         <th>Situação</th>
+                        {% if can_manage %}
                         <th>Ações</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -67,19 +71,21 @@
                                 <span class="status status-warn">Revisar</span>
                             {% endif %}
                         </td>
+                        {% if can_manage %}
                         <td>
                             <div class="row-actions">
                                 <a class="button" href="{% url 'editar_nota' nota.id %}">Editar</a>
                                 <a class="button button-danger" href="{% url 'deletar_nota' nota.id %}">Excluir</a>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5">
+                        <td colspan="{% if can_manage %}5{% else %}4{% endif %}">
                             <div class="empty-state">
                                 <strong>Nenhuma nota cadastrada</strong>
-                                <span>Use o botão Nova Nota para começar.</span>
+                                <span>{% if can_manage %}Use o botão Nova Nota para começar.{% else %}Suas notas aparecerão aqui quando forem lançadas pelo professor.{% endif %}</span>
                             </div>
                         </td>
                     </tr>

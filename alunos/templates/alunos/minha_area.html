@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block page_title %}Minha Área | Portal Universitário{% endblock %}
+{% block eyebrow %}Área do aluno{% endblock %}
+{% block title %}Minha Área{% endblock %}
+
+{% block content %}
+<div class="content-stack">
+    {% if aluno %}
+    <section class="metric-strip" aria-label="Resumo do aluno">
+        <article class="metric">
+            <span>Curso</span>
+            <strong>{{ aluno.curso|default:"Não informado" }}</strong>
+        </article>
+        <article class="metric">
+            <span>Média geral</span>
+            <strong>{{ media_geral|floatformat:1 }}</strong>
+        </article>
+        <article class="metric">
+            <span>Total de faltas</span>
+            <strong>{{ faltas|length }}</strong>
+        </article>
+    </section>
+
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Dados acadêmicos</h2>
+            <span>{{ aluno.matricula }}</span>
+        </div>
+        <div class="profile-summary">
+            <div>
+                <span>Aluno</span>
+                <strong>{{ aluno.nome }}</strong>
+            </div>
+            <div>
+                <span>Curso</span>
+                <strong>{{ aluno.curso|default:"Não informado" }}</strong>
+            </div>
+            <div>
+                <span>Disciplinas cursando</span>
+                <strong>{{ disciplinas|length }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Disciplinas cursando</h2>
+            <span>{{ disciplinas|length }} disciplina(s)</span>
+        </div>
+        <div class="tag-list">
+            {% for disciplina in disciplinas %}
+                <span class="tag">{{ disciplina.nome }} <small>{{ disciplina.codigo }}</small></span>
+            {% empty %}
+                <div class="empty-state">
+                    <strong>Nenhuma disciplina vinculada</strong>
+                    <span>As disciplinas aparecerão aqui quando o professor atualizar seu cadastro.</span>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Notas</h2>
+            <span>{{ notas|length }} registro(s)</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Disciplina</th>
+                        <th>Notas</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nota in notas %}
+                    <tr>
+                        <td>
+                            <span class="cell-title">{{ nota.disciplina.nome }}</span>
+                            <span class="cell-subtitle">{{ nota.disciplina.codigo }}</span>
+                        </td>
+                        <td>
+                            <div class="score-grid">
+                                <span class="score"><small>N1</small>{{ nota.nota1|floatformat:1 }}</span>
+                                <span class="score"><small>N2</small>{{ nota.nota2|floatformat:1 }}</span>
+                                <span class="score"><small>Média</small>{{ nota.media|floatformat:1 }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if nota.media >= 7 %}
+                                <span class="status status-ok">Aprovado</span>
+                            {% else %}
+                                <span class="status status-warn">Revisar</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <strong>Nenhuma nota lançada</strong>
+                                <span>Suas notas aparecerão aqui quando forem registradas.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Faltas</h2>
+            <span>{{ faltas|length }} registro(s)</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Disciplina</th>
+                        <th>Data</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for falta in faltas %}
+                    <tr>
+                        <td>
+                            <span class="cell-title">{{ falta.disciplina.nome }}</span>
+                            <span class="cell-subtitle">{{ falta.disciplina.codigo }}</span>
+                        </td>
+                        <td>{{ falta.data|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if falta.justificada %}
+                                <span class="status status-ok">Justificada</span>
+                            {% else %}
+                                <span class="status status-warn">Não justificada</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <strong>Nenhuma falta registrada</strong>
+                                <span>Suas faltas aparecerão aqui quando forem registradas.</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% else %}
+    <section class="confirm-panel">
+        <p>Seu usuário ainda não está vinculado a um cadastro de aluno.</p>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

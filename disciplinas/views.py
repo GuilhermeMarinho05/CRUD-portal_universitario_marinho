@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import (
     render,
     redirect,
@@ -6,21 +8,30 @@ from django.shortcuts import (
 
 from .models import Disciplina
 from .forms import DisciplinaForm
+from users.access import is_aluno, is_professor, role_required
 
 
+@login_required
 def lista_disciplinas(request):
-
-    disciplinas = Disciplina.objects.all()
+    if is_aluno(request.user):
+        aluno = getattr(request.user, 'aluno', None)
+        disciplinas = aluno.disciplinas.all() if aluno else Disciplina.objects.none()
+    elif is_professor(request.user):
+        disciplinas = Disciplina.objects.all()
+    else:
+        raise PermissionDenied
 
     return render(
         request,
         'disciplinas/lista.html',
         {
-            'disciplinas': disciplinas
+            'disciplinas': disciplinas,
+            'can_manage': is_professor(request.user),
         }
     )
 
 
+@role_required('professor')
 def criar_disciplina(request):
 
     form = DisciplinaForm(
@@ -44,6 +55,7 @@ def criar_disciplina(request):
     )
 
 
+@role_required('professor')
 def editar_disciplina(request, id):
 
     disciplina = get_object_or_404(
@@ -73,6 +85,7 @@ def editar_disciplina(request, id):
     )
 
 
+@role_required('professor')
 def excluir_disciplina(request, id):
 
     disciplina = get_object_or_404(
