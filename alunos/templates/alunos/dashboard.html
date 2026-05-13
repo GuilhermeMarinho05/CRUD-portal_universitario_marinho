@@ -1,13 +1,58 @@
 {% extends "base.html" %}
 
+{% block page_title %}Dashboard de {{ aluno.nome }} | Portal Universitário{% endblock %}
+{% block eyebrow %}Resumo acadêmico{% endblock %}
 {% block title %}Dashboard de {{ aluno.nome }}{% endblock %}
 
 {% block content %}
-<p><strong>Matrícula:</strong> {{ aluno.matricula }}</p>
+<div class="content-stack">
+    <section class="student-hero">
+        <div>
+            <p class="eyebrow">Resumo acadêmico</p>
+            <h2>{{ aluno.nome }}</h2>
+            <span>{{ aluno.matricula }}</span>
+        </div>
+        <strong>{{ media_geral|floatformat:1 }}</strong>
+    </section>
 
-<p><strong>Média Geral:</strong> {{ media_geral }}</p>
+    <section class="metric-strip" aria-label="Resumo do aluno">
+        <article class="metric">
+            <span>Matrícula</span>
+            <strong>{{ aluno.matricula }}</strong>
+        </article>
+        <article class="metric">
+            <span>Média geral</span>
+            <strong>{{ media_geral|floatformat:1 }}</strong>
+        </article>
+        <article class="metric">
+            <span>Disciplinas cursando</span>
+            <strong>{{ disciplinas_cursando }}</strong>
+        </article>
+    </section>
 
-<p><strong>Disciplinas cursando:</strong> {{ disciplinas_cursando }}</p>
+    <section class="data-panel">
+        <div class="panel-header">
+            <h2>Dados acadêmicos</h2>
+            <span>{{ aluno.nome }}</span>
+        </div>
+        <div class="profile-summary">
+            <div>
+                <span>Aluno</span>
+                <strong>{{ aluno.nome }}</strong>
+            </div>
+            <div>
+                <span>Faltas</span>
+                <strong>{{ total_faltas }}</strong>
+            </div>
+            <div>
+                <span>Próxima atividade</span>
+                <strong>{{ proxima_atividade }}</strong>
+            </div>
+        </div>
+    </section>
 
-<a href="/alunos/">← Voltar</a>
+    <div class="form-actions">
+        <a class="button" href="{% url 'lista_alunos' %}">Voltar</a>
+    </div>
+</div>
 {% endblock %}
