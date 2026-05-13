@@ -169,7 +169,14 @@ O portal usa dois perfis de acesso:
 - `aluno`: visualiza somente sua area academica, notas, faltas, disciplinas cursando e curso.
 - `professor`: gerencia alunos, disciplinas, notas e faltas.
 
-No banco local deste projeto foram criados estes usuarios de teste:
+Esses usuarios sao criados automaticamente pela migration
+`users.0002_create_default_portal_users` quando o comando abaixo e executado:
+
+```bash
+python manage.py migrate
+```
+
+Credenciais de desenvolvimento:
 
 ```text
 Usuario: aluno
