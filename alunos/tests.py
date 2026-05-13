@@ -27,14 +27,14 @@ class AlunoUrlTests(SimpleTestCase):
 class AlunoPageRenderTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            username='admin',
+            username='professor_teste',
             password='admin12345'
         )
         Profile.objects.create(user=self.user, role='professor')
         self.client.force_login(self.user)
 
     def test_lista_alunos_renders_successfully(self):
-        Aluno.objects.create(nome='Ana Silva', matricula='A001')
+        Aluno.objects.create(nome='Ana Silva', matricula='A101')
 
         response = self.client.get(reverse('lista_alunos'))
 
@@ -42,7 +42,7 @@ class AlunoPageRenderTests(TestCase):
         self.assertContains(response, 'Ana Silva')
 
     def test_dashboard_aluno_renders_successfully(self):
-        aluno = Aluno.objects.create(nome='Ana Silva', matricula='A001')
+        aluno = Aluno.objects.create(nome='Ana Silva', matricula='A102')
 
         response = self.client.get(reverse('dashboard_aluno', args=[aluno.id]))
 
@@ -58,14 +58,14 @@ class AlunoPageRenderTests(TestCase):
 
     def test_student_is_redirected_to_own_area_from_portal(self):
         aluno_user = User.objects.create_user(
-            username='aluno',
+            username='aluno_portal_teste',
             password='aluno12345'
         )
         Profile.objects.create(user=aluno_user, role='aluno')
         Aluno.objects.create(
             user=aluno_user,
             nome='Ana Silva',
-            matricula='A001',
+            matricula='A103',
             curso='Sistemas de Informação'
         )
         self.client.force_login(aluno_user)
@@ -76,7 +76,7 @@ class AlunoPageRenderTests(TestCase):
 
     def test_student_cannot_access_aluno_crud(self):
         aluno_user = User.objects.create_user(
-            username='aluno',
+            username='aluno_bloqueado_teste',
             password='aluno12345'
         )
         Profile.objects.create(user=aluno_user, role='aluno')
