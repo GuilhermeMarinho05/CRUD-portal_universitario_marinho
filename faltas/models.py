@@ -69,8 +69,7 @@ class LimiteFaltas(models.Model):
 
     @property
     def faltas_maximas(self):
-        """Número máximo de faltas permitidas com base na carga horária"""
-        return int((self.percentual_maximo / 100) * self.carga_horaria_total)
+        if self.percentual_maximo is None or self.carga_horaria_total is None:
+            return 0
 
-    def __str__(self):
-        return f"{self.disciplina}: max {self.faltas_maximas} faltas ({self.percentual_maximo}%)"
+        return int((self.percentual_maximo / 100) * self.carga_horaria_total)
