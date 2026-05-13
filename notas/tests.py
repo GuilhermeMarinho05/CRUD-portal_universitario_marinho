@@ -1,14 +1,22 @@
+from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from alunos.models import Aluno
 from disciplinas.models import Disciplina
+from users.models import Profile
 from .models import Nota
 
 
 @override_settings(SECURE_SSL_REDIRECT=False)
 class NotaDeleteTests(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin12345'
+        )
+        Profile.objects.create(user=self.user, role='professor')
+        self.client.force_login(self.user)
         self.aluno = Aluno.objects.create(nome='Ana Silva', matricula='A001')
         self.disciplina = Disciplina.objects.create(nome='Matematica', codigo='MAT01')
         self.nota = Nota.objects.create(
@@ -30,3 +38,36 @@ class NotaDeleteTests(TestCase):
 
         self.assertRedirects(response, reverse('lista_notas'))
         self.assertFalse(Nota.objects.filter(id=self.nota.id).exists())
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class NotaAccessTests(TestCase):
+    def test_student_only_sees_own_notas(self):
+        aluno_user = User.objects.create_user(username='aluno', password='aluno12345')
+        Profile.objects.create(user=aluno_user, role='aluno')
+        aluno = Aluno.objects.create(
+            user=aluno_user,
+            nome='Ana Silva',
+            matricula='A001',
+            curso='Sistemas de Informação'
+        )
+        outro_aluno = Aluno.objects.create(nome='Bruno Lima', matricula='B001')
+        disciplina = Disciplina.objects.create(nome='Matematica', codigo='MAT01')
+        Nota.objects.create(aluno=aluno, disciplina=disciplina, nota1=8, nota2=7)
+        Nota.objects.create(aluno=outro_aluno, disciplina=disciplina, nota1=4, nota2=5)
+        self.client.force_login(aluno_user)
+
+        response = self.client.get(reverse('lista_notas'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Ana Silva')
+        self.assertNotContains(response, 'Bruno Lima')
+
+    def test_student_cannot_create_nota(self):
+        aluno_user = User.objects.create_user(username='aluno', password='aluno12345')
+        Profile.objects.create(user=aluno_user, role='aluno')
+        self.client.force_login(aluno_user)
+
+        response = self.client.get(reverse('criar_nota'))
+
+        self.assertEqual(response.status_code, 403)

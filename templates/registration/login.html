@@ -1,0 +1,60 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | Portal Universitário</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="login-page">
+    <main class="login-shell">
+        <section class="login-card" aria-labelledby="login-title">
+            <a class="brand login-brand" href="/">
+                <span class="brand-mark">PU</span>
+                <span>
+                    <strong>Portal</strong>
+                    <small>Tech</small>
+                </span>
+            </a>
+
+            <div class="login-heading">
+                <p class="eyebrow">Acesso ao portal</p>
+                <h1 id="login-title">Entrar</h1>
+            </div>
+
+            {% if form.non_field_errors %}
+            <div class="alert" role="alert">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+
+                <div class="form-field">
+                    <label for="{{ form.username.id_for_label }}">Usuário</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <div class="field-error">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.password.id_for_label }}">Senha</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <div class="field-error">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit">Acessar portal</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

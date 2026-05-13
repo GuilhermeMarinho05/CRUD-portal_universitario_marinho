@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block page_title %}Excluir Falta | Portal Universitário{% endblock %}
+{% block eyebrow %}Frequência{% endblock %}
+{% block title %}Excluir Falta{% endblock %}
+
+{% block content %}
+<div class="content-stack">
+    <section class="confirm-panel">
+        <p>
+            Deseja excluir a falta de
+            <span class="confirm-name">{{ falta.aluno.nome }}</span>
+            em
+            <span class="confirm-name">{{ falta.disciplina.nome }}</span>
+            no dia
+            <span class="confirm-name">{{ falta.data|date:"d/m/Y" }}</span>?
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="confirm-actions">
+                <button type="submit">Confirmar</button>
+                <a class="button" href="{% url 'lista_faltas' %}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -1,15 +1,35 @@
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
+
 from .models import Nota
 from .forms import NotaForm
+from users.access import is_aluno, is_professor, role_required
 
 
 # LISTAR
+@login_required
 def lista_notas(request):
-    notas = Nota.objects.all()
-    return render(request, 'notas/lista.html', {'notas': notas})
+    if is_aluno(request.user):
+        aluno = getattr(request.user, 'aluno', None)
+        notas = Nota.objects.filter(aluno=aluno) if aluno else Nota.objects.none()
+    elif is_professor(request.user):
+        notas = Nota.objects.all()
+    else:
+        raise PermissionDenied
+
+    return render(
+        request,
+        'notas/lista.html',
+        {
+            'notas': notas.select_related('aluno', 'disciplina'),
+            'can_manage': is_professor(request.user),
+        }
+    )
 
 
 # CRIAR
+@role_required('professor')
 def criar_nota(request):
     form = NotaForm(request.POST or None)
 
@@ -21,6 +41,7 @@ def criar_nota(request):
 
 
 # EDITAR
+@role_required('professor')
 def editar_nota(request, id):
     nota = get_object_or_404(Nota, id=id)
     form = NotaForm(request.POST or None, instance=nota)
@@ -33,6 +54,7 @@ def editar_nota(request, id):
 
 
 # DELETAR
+@role_required('professor')
 def deletar_nota(request, id):
     nota = get_object_or_404(Nota, id=id)
 

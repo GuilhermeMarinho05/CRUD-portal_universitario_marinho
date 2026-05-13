@@ -73,6 +73,8 @@ Acesse no navegador:
 http://127.0.0.1:8000/
 ```
 
+A rota inicial abre a tela de login. Depois de autenticar, o usuario e enviado para o portal em `/alunos/`.
+
 ## Como executar no Linux
 
 Abra o terminal na pasta onde deseja deixar o projeto.
@@ -135,16 +137,20 @@ Acesse no navegador:
 http://127.0.0.1:8000/
 ```
 
+A rota inicial abre a tela de login. Depois de autenticar, o usuario e enviado para o portal em `/alunos/`.
+
 ## Rotas principais
 
+- `http://127.0.0.1:8000/` - login
 - `http://127.0.0.1:8000/alunos/`
 - `http://127.0.0.1:8000/disciplinas/`
 - `http://127.0.0.1:8000/notas/`
+- `http://127.0.0.1:8000/logout/`
 - `http://127.0.0.1:8000/admin/`
 
-## Criar usuario administrador
+## Criar usuario para acesso
 
-Para acessar o painel `/admin/`, crie um superusuario:
+Para acessar o portal e o painel `/admin/`, crie um superusuario:
 
 ```bash
 python manage.py createsuperuser
@@ -154,6 +160,25 @@ No Windows, o comando e o mesmo se o ambiente virtual estiver ativo:
 
 ```powershell
 python manage.py createsuperuser
+```
+
+## Usuarios de teste
+
+O portal usa dois perfis de acesso:
+
+- `aluno`: visualiza somente sua area academica, notas, faltas, disciplinas cursando e curso.
+- `professor`: gerencia alunos, disciplinas, notas e faltas.
+
+No banco local deste projeto foram criados estes usuarios de teste:
+
+```text
+Usuario: aluno
+Senha: aluno123
+```
+
+```text
+Usuario: professor
+Senha: professor123
 ```
 
 ## Rodar testes

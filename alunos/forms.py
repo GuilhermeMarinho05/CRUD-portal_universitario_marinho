@@ -5,4 +5,4 @@ class AlunoForm(forms.ModelForm):
 
     class Meta:
         model = Aluno
-        fields = ['nome', 'matricula']
+        fields = ['user', 'nome', 'matricula', 'curso', 'disciplinas']

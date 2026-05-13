@@ -37,6 +37,7 @@
           <tr>
             <th>Aluno</th>
             <th>Matrícula</th>
+            <th>Curso</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -53,6 +54,7 @@
               </div>
             </td>
             <td>{{ aluno.matricula }}</td>
+            <td>{{ aluno.curso|default:"Não informado" }}</td>
             <td>
               <div class="row-actions">
                 <a class="button" href="/alunos/dashboard/{{ aluno.id }}/"
@@ -71,7 +73,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="3">
+            <td colspan="4">
               <div class="empty-state">
                 <strong>Nenhum aluno cadastrado</strong>
                 <span>Use o botão Novo Aluno para começar.</span>
