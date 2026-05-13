@@ -176,6 +176,13 @@ Esses usuarios sao criados automaticamente pela migration
 python manage.py migrate
 ```
 
+Se o banco local ja existia antes dessa migration, ou se as senhas nao
+funcionarem, rode:
+
+```bash
+python manage.py seed_portal_users
+```
+
 Credenciais de desenvolvimento:
 
 ```text

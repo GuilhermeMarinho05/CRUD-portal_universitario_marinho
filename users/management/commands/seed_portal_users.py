@@ -1,0 +1,92 @@
+from datetime import date
+
+from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
+
+from alunos.models import Aluno
+from disciplinas.models import Disciplina
+from faltas.models import Falta
+from notas.models import Nota
+from users.models import Profile
+
+
+class Command(BaseCommand):
+    help = 'Create or reset the default student and professor users.'
+
+    def handle(self, *args, **options):
+        User = get_user_model()
+
+        professor, _ = User.objects.get_or_create(
+            username='professor',
+            defaults={
+                'email': 'professor@example.com',
+                'first_name': 'Professor',
+            },
+        )
+        professor.email = 'professor@example.com'
+        professor.first_name = 'Professor'
+        professor.is_staff = True
+        professor.is_active = True
+        professor.set_password('professor123')
+        professor.save()
+
+        Profile.objects.update_or_create(
+            user=professor,
+            defaults={'role': 'professor'},
+        )
+
+        aluno_user, _ = User.objects.get_or_create(
+            username='aluno',
+            defaults={
+                'email': 'aluno@example.com',
+                'first_name': 'Aluno',
+            },
+        )
+        aluno_user.email = 'aluno@example.com'
+        aluno_user.first_name = 'Aluno'
+        aluno_user.is_staff = False
+        aluno_user.is_active = True
+        aluno_user.set_password('aluno123')
+        aluno_user.save()
+
+        Profile.objects.update_or_create(
+            user=aluno_user,
+            defaults={'role': 'aluno'},
+        )
+
+        disciplina, _ = Disciplina.objects.get_or_create(
+            codigo='MAT01',
+            defaults={'nome': 'Matemática'},
+        )
+
+        aluno, _ = Aluno.objects.update_or_create(
+            matricula='A001',
+            defaults={
+                'user': aluno_user,
+                'nome': 'Aluno Demo',
+                'curso': 'Sistemas de Informação',
+            },
+        )
+        aluno.disciplinas.add(disciplina)
+
+        Nota.objects.update_or_create(
+            aluno=aluno,
+            disciplina=disciplina,
+            defaults={
+                'nota1': 8,
+                'nota2': 7,
+            },
+        )
+
+        Falta.objects.get_or_create(
+            aluno=aluno,
+            disciplina=disciplina,
+            data=date(2026, 5, 13),
+            defaults={'justificada': False},
+        )
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                'Default users ready: aluno/aluno123 and professor/professor123'
+            )
+        )
