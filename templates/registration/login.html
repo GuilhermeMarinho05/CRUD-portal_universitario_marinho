@@ -4,21 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login | Portal Universitário</title>
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <title>Login | Portal Tech</title>
+    <link rel="stylesheet" href="{% static 'css/portal.css' %}">
 </head>
 <body class="login-page">
     <main class="login-shell">
         <section class="login-card" aria-labelledby="login-title">
-            <a class="brand login-brand" href="/">
-                <span class="brand-mark brand-logo-mark">
-                    <img src="{% static 'img/logo.png' %}" alt="Portal Tech">
-                </span>
-                <span>
-                    <strong>Portal</strong>
-                    <small>Tech</small>
-                </span>
-            </a>
+            <div class="login-logo-panel">
+                <img src="{% static 'assets/brand/logo.png' %}" alt="Portal Tech">
+            </div>
 
             <div class="login-heading">
                 <p class="eyebrow">Acesso ao portal</p>
