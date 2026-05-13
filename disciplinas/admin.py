@@ -1,31 +1,22 @@
 from django.contrib import admin
+
+from users.access import is_aluno, is_professor
 from .models import Disciplina
 
-# Register your models here.
 
 @admin.register(Disciplina)
 class DisciplinaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'codigo')
-
-    from django.contrib import admin
-from rolepermissions.checkers import has_role
-from .models import Disciplina
-
-
-@admin.register(Disciplina)
-class DisciplinaAdmin(admin.ModelAdmin):
+    search_fields = ('nome', 'codigo')
 
     def has_view_permission(self, request, obj=None):
-        return (
-            has_role(request.user, 'aluno') or
-            has_role(request.user, 'professor')
-        )
+        return is_aluno(request.user) or is_professor(request.user)
 
     def has_add_permission(self, request):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)
 
     def has_change_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)
 
     def has_delete_permission(self, request, obj=None):
-        return has_role(request.user, 'professor')
+        return is_professor(request.user)
