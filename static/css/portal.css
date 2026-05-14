@@ -929,3 +929,27 @@ select[multiple] {
         height: 76px;
     }
 }
+
+
+.footer {
+    background-color: #111827;
+    color: white;
+    padding: 15px 30px;
+    margin-top: 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
